@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom AI Chatbots for Higher Ed | Faculty & Staff Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-hover: #222230;
+            --accent-gold: #d4a853;
+            --accent-gold-dim: #b8923f;
+            --accent-teal: #2dd4bf;
+            --accent-coral: #f97066;
+            --accent-lavender: #a78bfa;
+            --text-primary: #f0f0f5;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border: #2a2a3a;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --error: #f87171;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Subtle grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(212, 168, 83, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 168, 83, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -1;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 0.75rem 0;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-brand {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .nav-links a.staff-link {
+            color: var(--accent-teal);
+        }
+
+        .nav-links a.examples-link {
+            color: var(--accent-lavender);
+        }
+
+        /* Header */
+        header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem 3rem;
+        }
+
+        header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        header h1 span {
+            color: var(--accent-gold);
+        }
+
+        header .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+        }
+
+        .audience-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .audience-tab {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .audience-tab:hover {
+            border-color: var(--accent-gold-dim);
+            color: var(--text-primary);
+        }
+
+        .audience-tab.active {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            background: rgba(212, 168, 83, 0.1);
+        }
+
+        .audience-tab.staff-tab.active {
+            border-color: var(--accent-teal);
+            color: var(--accent-teal);
+            background: rgba(45, 212, 191, 0.1);
+        }
+
+        .audience-tab.examples-tab.active {
+            border-color: var(--accent-lavender);
+            color: var(--accent-lavender);
+            background: rgba(167, 139, 250, 0.1);
+        }
+
+        /* Main content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        .section-hidden {
+            display: none;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2 .icon {
+            font-size: 1.25rem;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--text-primary);
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem;
+            color: var(--accent-gold);
+        }
+
+        .examples-content h4 {
+            color: var(--accent-lavender);
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Author callout */
+        .author-callout {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(212, 168, 83, 0.1));
+            border: 1px solid var(--accent-lavender);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .author-callout .unicorn {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+
+        .author-callout .author-info h3 {
+            margin: 0 0 0.25rem;
+            color: var(--accent-lavender);
+            font-size: 1.1rem;
+        }
+
+        .author-callout .author-info .title {
+            color: var(--accent-gold);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .author-callout .author-info p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .comparison-table td {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+        }
+
+        .comparison-table tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .comparison-table .platform-name {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .yes { color: var(--success); }
+        .no { color: var(--error); }
+        .maybe { color: var(--warning); }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--accent-gold-dim);
+            transform: translateY(-2px);
+        }
+
+        .card.teal-accent:hover {
+            border-color: var(--accent-teal);
+        }
+
+        .card.lavender-accent:hover {
+            border-color: var(--accent-lavender);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title .logo {
+            font-size: 1.25rem;
+        }
+
+        .card ul {
+            margin: 0.75rem 0;
+            padding-left: 1.25rem;
+        }
+
+        .card li {
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-right: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .badge-free { background: rgba(52, 211, 153, 0.2); color: var(--success); }
+        .badge-paid { background: rgba(251, 191, 36, 0.2); color: var(--warning); }
+        .badge-share { background: rgba(45, 212, 191, 0.2); color: var(--accent-teal); }
+        .badge-noshare { background: rgba(248, 113, 113, 0.2); color: var(--error); }
+        .badge-rec { background: rgba(212, 168, 83, 0.2); color: var(--accent-gold); }
+        .badge-example { background: rgba(167, 139, 250, 0.2); color: var(--accent-lavender); }
+
+        /* Alert boxes */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 3px solid;
+        }
+
+        .alert-info {
+            background: rgba(45, 212, 191, 0.1);
+            border-color: var(--accent-teal);
+        }
+
+        .alert-warning {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: var(--warning);
+        }
+
+        .alert-success {
+            background: rgba(52, 211, 153, 0.1);
+            border-color: var(--success);
+        }
+
+        .alert-example {
+            background: rgba(167, 139, 250, 0.1);
+            border-color: var(--accent-lavender);
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .alert p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Steps */
+        .steps {
+            counter-reset: step;
+            margin: 1rem 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .step.teal::before {
+            background: var(--accent-teal);
+        }
+
+        .step.lavender::before {
+            background: var(--accent-lavender);
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content strong {
+            color: var(--text-primary);
+        }
+
+        .step-content p {
+            margin: 0.25rem 0 0;
+            font-size: 0.9rem;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: var(--text-secondary);
+        }
+
+        .code-block .comment {
+            color: var(--text-muted);
+        }
+
+        .code-block .highlight {
+            color: var(--accent-gold);
+        }
+
+        .code-block .lavender {
+            color: var(--accent-lavender);
+        }
+
+        .code-block-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-lavender);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Collapsible */
+        .collapsible {
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .collapsible-header:hover {
+            background: var(--bg-hover);
+        }
+
+        .collapsible-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .collapsible-icon {
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+
+        .collapsible.active .collapsible-icon {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .collapsible-inner {
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+        }
+
+        /* Snippet label */
+        .snippet-label {
+            display: inline-block;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-lavender);
+            background: rgba(167, 139, 250, 0.15);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-inner {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            header {
+                padding: 2rem 1.5rem;
+            }
+
+            main {
+                padding: 0 1.5rem 3rem;
+            }
+
+            .audience-tabs {
+                flex-direction: column;
+            }
+
+            .comparison-table {
+                font-size: 0.8rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .author-callout {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <div class="nav-brand">AI Chatbot Guide</div>
+            <div class="nav-links">
+                <a href="#comparison">Platforms</a>
+                <a href="#universal">Shareable Prompts</a>
+                <a href="#howto">How-To</a>
+                <a href="#instructions">Writing Instructions</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#staff" class="staff-link">Staff Guide</a>
+                <a href="#examples" class="examples-link">Our Bots</a>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Custom AI Chatbots for <span>Higher Ed</span></h1>
+        <p class="subtitle">A practical guide to creating AI assistants with ChatGPT, Claude, and Microsoft Copilot. Separate sections for faculty (educational chatbots), staff (productivity agents), and real-world examples.</p>
+        
+        <div class="audience-tabs">
+            <button class="audience-tab active" data-target="faculty">👩‍🏫 Faculty Guide</button>
+            <button class="audience-tab staff-tab" data-target="staff">🏢 Staff Guide</button>
+            <button class="audience-tab examples-tab" data-target="examples">🦄 Details About Our Bots</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- ==================== FACULTY SECTIONS ==================== -->
+        <div id="faculty-content">
+            
+            <section id="comparison">
+                <h2><span class="icon">⚖️</span> Platform Quick Reference</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Who Can Create</th>
+                            <th>Shareable?</th>
+                            <th>Student Access</th>
+                            <th>Best For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="platform-name">ChatGPT Custom GPTs</td>
+                            <td><span class="maybe">Plus/Team ($20/mo)</span></td>
+                            <td><span class="yes">✓ Public link</span></td>
+                            <td><span class="yes">✓ Free users can use</span></td>
+                            <td>Distributable student tools</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Claude Projects</td>
+                            <td><span class="yes">Free or Pro</span></td>
+                            <td><span class="no">✗ Cannot share</span></td>
+                            <td><span class="no">N/A</span></td>
+                            <td>Personal teaching prep</td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Copilot Agents</td>
+                            <td><span class="maybe">Studio Lite (free) or Full</span></td>
+                            <td><span class="maybe">⚠ Tenant-dependent</span></td>
+                            <td><span class="maybe">Varies by institution</span></td>
+                            <td>Privacy-sensitive, M365 integrated</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info">
+                    <div class="alert-title">Key Correction</div>
+                    <p>Free ChatGPT users <strong>can access and use</strong> Custom GPTs — they just can't <em>create</em> them. This makes GPTs viable for distributing to students.</p>
+                </div>
+            </section>
+
+            <section id="universal">
+                <h2><span class="icon">📋</span> The Universal Solution: Shareable Prompts</h2>
+                
+                <p>The most reliable way to give students access to a custom AI experience is a <strong>copy-paste prompt</strong>. This works with any free AI (ChatGPT, Claude, Copilot, Gemini) and requires no special accounts.</p>
+
+                <div class="alert alert-success">
+                    <div class="alert-title">Recommended Approach</div>
+                    <p>Create a well-crafted prompt document. Students paste it into any AI chat to activate the same behavior every time. Platform-agnostic, free-tier friendly, and you control the instructions.</p>
+                </div>
+
+                <h3>Prompt Template Structure</h3>
+                <div class="code-block"><span class="comment"># [Your Chatbot Name]</span>
+
+<span class="highlight">## Role</span>
+You are [role description]. You help students with [subject/task].
+
+<span class="highlight">## Behavior</span>
+- Use Socratic questioning: ask guiding questions before giving answers
+- Break complex problems into steps
+- When students make errors, identify the type of error and ask them to reconsider
+- Celebrate effort and progress, not just correct answers
+
+<span class="highlight">## Boundaries</span>
+- Never provide complete solutions to homework problems
+- If asked to "just give the answer," redirect to guided problem-solving
+- Do not do the student's work for them
+
+<span class="highlight">## Subject Knowledge</span>
+[Add course-specific context, terminology, or reference materials here]
+
+<span class="highlight">## First Message</span>
+Begin by introducing yourself and asking what topic the student wants to work on.</div>
+
+                <h3>Distributing to Students</h3>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-content">
+                            <strong>Create your prompt document</strong>
+                            <p>Use Google Docs, a PDF, or a page on your course site. Include clear instructions at the top.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">
+                            <strong>Add student instructions</strong>
+                            <p>"Copy everything below the line. Open any AI chat (ChatGPT, Claude, etc.). Paste and send. Start a new chat for each session."</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-content">
+                            <strong>Link from your LMS</strong>
+                            <p>Add the link to your course materials, assignment instructions, or announcements.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="howto">
+                <h2><span class="icon">🛠️</span> Platform How-To Guides</h2>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title"><span class="logo">🤖</span> ChatGPT Custom GPTs</div>
+                        <span class="badge badge-paid">Plus Required to Create</span>
+                        <span class="badge badge-share">Shareable</span>
+                        <span class="badge badge-rec">Best for Students</span>
+                        
+                        <h4>Create a GPT</h4>
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-content"><strong>Go to</strong> chatgpt.com → Explore GPTs → Create</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-content"><strong>Configure</strong> name, description, and instructions</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-content"><strong>Upload</strong> knowledge files (syllabi, guides, datasets)</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-content"><strong>Publish</strong> → "Anyone with a link" → Copy link</div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <p>Students on free ChatGPT accounts can use your GPT via the shared link. They can't create their own GPTs, but they can use yours.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="logo">🟠</span> Claude Projects</div>
+                        <span class="badge badge-free">Free Tier Available</span>
+                        <span class="badge badge-noshare">Cannot Share</span>
+                        
+                        <h4>Create a Project</h4>
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-content"><strong>Go to</strong> claude.ai → Projects (sidebar) → New Project</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-content"><strong>Add</strong> custom instructions (persistent system prompt)</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-content"><strong>Upload</strong> knowledge files (100+ documents)</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-content"><strong>Use</strong> — but only you can access this project</div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <p><strong>Cannot be shared.</strong> Projects stay in your personal account. Best for your own teaching prep, grading assistance, or material development.</p>
+                        </div>
+
+                        <h4>Student Workaround</h4>
+                        <p>Export your project's custom instructions as a shareable prompt document (see Universal Solution above).</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="logo">🔷</span> Microsoft Copilot Agents</div>
+                        <span class="badge badge-paid">Licensing Varies</span>
+                        <span class="badge badge-share">Org Sharing</span>
+                        
+                        <h4>Two Paths</h4>
+                        <p><strong>Copilot Studio Lite</strong> (free, browser-based): Good for simple agents without complex data needs.</p>
+                        <p><strong>Full Copilot Studio</strong>: Dataverse integration, Power Automate, custom connectors. Requires IT involvement.</p>
+
+                        <h4>Create via Studio Lite</h4>
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-content"><strong>Go to</strong> copilotstudio.microsoft.com</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-content"><strong>Sign in</strong> with your institutional Microsoft account</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-content"><strong>Create</strong> new agent → describe its purpose</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-content"><strong>Configure</strong> topics, knowledge sources, and behavior</div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <p><strong>Sharing is tenant-restricted.</strong> You can only share with users in your Microsoft 365 tenant. Students on personal accounts or different tenants may not have access.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="instructions">
+                <h2><span class="icon">✍️</span> Writing Effective Instructions</h2>
+                
+                <p>Whether you're configuring a Custom GPT, Claude Project, or shareable prompt, the same principles apply:</p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>1. Define the Role Clearly</h4>
+                        <p>Be specific about expertise, personality, and scope.</p>
+                        <div class="code-block"><span class="comment">Vague:</span> "You help with statistics."
+
+<span class="highlight">Better:</span> "You are a statistics tutor specializing in behavioral science research methods. You help undergraduate students understand hypothesis testing, correlation, and regression using real-world psychology examples."</div>
+                    </div>
+
+                    <div class="card">
+                        <h4>2. Specify Pedagogical Approach</h4>
+                        <p>Guide <em>how</em> the AI should teach.</p>
+                        <ul>
+                            <li><strong>Socratic:</strong> Ask questions before providing explanations</li>
+                            <li><strong>Scaffolding:</strong> Break complex tasks into smaller steps</li>
+                            <li><strong>Metacognitive:</strong> Ask students to explain their thinking</li>
+                            <li><strong>Growth mindset:</strong> Praise process, not just correctness</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>3. Set Clear Boundaries</h4>
+                        <p>Prevent the AI from doing students' work for them.</p>
+                        <div class="code-block">"Never provide complete solutions. When a student asks for an answer, first ask them to show their work or explain their current understanding. Guide them toward the answer through questions."</div>
+                    </div>
+
+                    <div class="card">
+                        <h4>4. Add Domain Context</h4>
+                        <p>Include course-specific information:</p>
+                        <ul>
+                            <li>Textbook or material references</li>
+                            <li>Key terminology definitions</li>
+                            <li>Expected student knowledge level</li>
+                            <li>Preferred statistical software (R, SPSS, etc.)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span class="collapsible-title">Advanced: Gamification Elements (Optional)</span>
+                        <span class="collapsible-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="collapsible-inner">
+                            <p>For faculty interested in game-like learning experiences:</p>
+                            <ul>
+                                <li><strong>XP/Leveling:</strong> Track progress across problems solved</li>
+                                <li><strong>Titles:</strong> Earn names like "Statistics Apprentice" → "Data Detective"</li>
+                                <li><strong>Hint economy:</strong> Students "spend" points for hints, encouraging independent attempts first</li>
+                                <li><strong>Confidence ratings:</strong> Ask students to rate their confidence before revealing if they're correct</li>
+                            </ul>
+                            <p>Note: These require more complex prompts and work best with Custom GPTs where you can maintain state within a conversation.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="privacy">
+                <h2><span class="icon">🔒</span> Privacy & FERPA</h2>
+                
+                <div class="alert alert-warning">
+                    <div class="alert-title">Core Principle</div>
+                    <p>Never upload identifiable student information to consumer AI tools. Strip names, student IDs, and personal details before using AI for any grading or feedback assistance.</p>
+                </div>
+
+                <h3>Platform Privacy Comparison</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Consideration</th>
+                            <th>ChatGPT</th>
+                            <th>Claude</th>
+                            <th>Copilot (Institutional)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="platform-name">Data used for training?</td>
+                            <td><span class="maybe">Opt-out available</span></td>
+                            <td><span class="maybe">Opt-out available</span></td>
+                            <td><span class="yes">No (enterprise)</span></td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Institutional DPA?</td>
+                            <td><span class="maybe">ChatGPT Team/Enterprise</span></td>
+                            <td><span class="maybe">Claude for Work</span></td>
+                            <td><span class="yes">Yes, via M365</span></td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Best for student data?</td>
+                            <td><span class="no">Avoid</span></td>
+                            <td><span class="no">Avoid</span></td>
+                            <td><span class="yes">Preferred</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Safe Practices</h3>
+                <ul>
+                    <li>Use institutional Copilot for anything involving student work</li>
+                    <li>De-identify all content before using consumer AI tools</li>
+                    <li>Inform students when AI tools are part of course activities</li>
+                    <li>Check your institution's AI policy — many have specific guidance</li>
+                </ul>
+            </section>
+
+        </div>
+
+        <!-- ==================== STAFF SECTIONS ==================== -->
+        <div id="staff-content" class="section-hidden">
+            
+            <section id="staff">
+                <h2><span class="icon">🏢</span> Copilot Agents for Staff Productivity</h2>
+                
+                <p>Microsoft Copilot Agents can automate routine tasks, answer common questions, and streamline workflows. This section covers what staff can build and the two main paths to creating agents.</p>
+
+                <h3>What Staff Can Build</h3>
+                <div class="card-grid">
+                    <div class="card teal-accent">
+                        <div class="card-title">📅 Meeting Prep Assistant</div>
+                        <p>Pulls relevant documents, past meeting notes, and action items before meetings. Summarizes context from emails and shared files.</p>
+                    </div>
+                    <div class="card teal-accent">
+                        <div class="card-title">📖 Policy Lookup Bot</div>
+                        <p>Answers questions about institutional policies, HR procedures, or department guidelines using uploaded policy documents.</p>
+                    </div>
+                    <div class="card teal-accent">
+                        <div class="card-title">👋 Onboarding Guide</div>
+                        <p>Walks new employees through forms, systems, and procedures. Points to relevant resources and contacts.</p>
+                    </div>
+                    <div class="card teal-accent">
+                        <div class="card-title">❓ Department FAQ Handler</div>
+                        <p>Answers common questions about your department's services, reducing repetitive email inquiries.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="studio-lite">
+                <h2><span class="icon">🎯</span> Copilot Studio Lite (The Accessible Path)</h2>
+                
+                <div class="alert alert-success">
+                    <div class="alert-title">Who This Is For</div>
+                    <p>Staff who want to create simple agents without developer support or complex setup. Browser-based, no-code, quick to deploy.</p>
+                </div>
+
+                <h3>Getting Started</h3>
+                <div class="steps">
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Access Copilot Studio</strong>
+                            <p>Go to <a href="https://copilotstudio.microsoft.com" style="color: var(--accent-teal);">copilotstudio.microsoft.com</a> and sign in with your institutional Microsoft account.</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Create New Agent</strong>
+                            <p>Click "Create" and describe what you want your agent to do. The AI will generate a starting configuration.</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Add Knowledge Sources</strong>
+                            <p>Upload documents, link SharePoint sites, or connect to public websites your agent should reference.</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Configure Topics</strong>
+                            <p>Define specific question-answer pairs or conversation flows for common queries.</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Test & Publish</strong>
+                            <p>Use the built-in test chat, then publish to Teams, a website, or other channels.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Studio Lite Limitations</h3>
+                <ul>
+                    <li>No Dataverse integration (can't store/query structured data)</li>
+                    <li>Limited Power Automate connections</li>
+                    <li>Fewer customization options than full Studio</li>
+                    <li>Sharing limited to your M365 tenant</li>
+                </ul>
+            </section>
+
+            <section id="full-studio">
+                <h2><span class="icon">⚙️</span> Full Copilot Studio (IT-Supported Projects)</h2>
+                
+                <p>For more complex agents that need to read/write data, integrate with other systems, or require advanced logic.</p>
+
+                <h3>When to Escalate to IT</h3>
+                <div class="card-grid">
+                    <div class="card teal-accent">
+                        <h4>You Need Dataverse</h4>
+                        <p>Storing and querying structured records — employee directories, equipment inventories, request tracking.</p>
+                    </div>
+                    <div class="card teal-accent">
+                        <h4>You Need Automation</h4>
+                        <p>Power Automate flows that create tickets, send emails, update spreadsheets, or trigger other systems.</p>
+                    </div>
+                    <div class="card teal-accent">
+                        <h4>You Need External Data</h4>
+                        <p>Custom connectors to APIs, databases, or third-party services outside M365.</p>
+                    </div>
+                    <div class="card teal-accent">
+                        <h4>You Need Broader Sharing</h4>
+                        <p>Agents accessible to external users, multiple tenants, or embedded in public-facing sites.</p>
+                    </div>
+                </div>
+
+                <h3>Understanding Dataverse</h3>
+                <p>Dataverse is Microsoft's database platform within Power Platform. Think of it as structured storage for your agent:</p>
+                <ul>
+                    <li><strong>Tables:</strong> Like spreadsheet tabs — Employees, Requests, Equipment, etc.</li>
+                    <li><strong>Columns:</strong> Fields within tables — Name, Status, Date, etc.</li>
+                    <li><strong>Relationships:</strong> Connect tables — link Requests to Employees who submitted them</li>
+                    <li><strong>Security:</strong> Control who can read/write which records</li>
+                </ul>
+
+                <div class="alert alert-info">
+                    <div class="alert-title">Example: IT Help Desk Agent</div>
+                    <p>User asks "What's the status of my ticket?" → Agent queries Dataverse for tickets matching user's email → Returns status and assigned technician → Optionally triggers Power Automate to send notification.</p>
+                </div>
+
+                <h3>Working with IT</h3>
+                <p>When requesting support for a full Copilot Studio project:</p>
+                <ul>
+                    <li><strong>Define the use case:</strong> What problem does this solve? Who uses it?</li>
+                    <li><strong>Document data needs:</strong> What information does the agent need to access or store?</li>
+                    <li><strong>Identify integrations:</strong> What other systems should it connect to?</li>
+                    <li><strong>Clarify ownership:</strong> Who maintains the agent after it's built?</li>
+                </ul>
+            </section>
+
+            <section id="staff-sharing">
+                <h2><span class="icon">🔗</span> Sharing Agents in Your Organization</h2>
+                
+                <h3>Tenant Basics</h3>
+                <p>Your "tenant" is your organization's Microsoft 365 environment. By default, Copilot Agents can only be shared within your tenant.</p>
+
+                <div class="card">
+                    <h4>Common Sharing Scenarios</h4>
+                    <ul>
+                        <li><strong>Same department:</strong> Usually works seamlessly</li>
+                        <li><strong>Cross-department:</strong> Works if same tenant, but permissions may vary</li>
+                        <li><strong>Partner institutions:</strong> Requires guest access configuration</li>
+                        <li><strong>Students on personal accounts:</strong> Often doesn't work — different tenant</li>
+                        <li><strong>Public access:</strong> Possible but requires specific setup and approvals</li>
+                    </ul>
+                </div>
+
+                <h3>If Users Can't Access Your Agent</h3>
+                <div class="steps">
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Check their account type</strong>
+                            <p>Are they signed in with an institutional account or personal Microsoft account?</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Verify licensing</strong>
+                            <p>Some agent features require specific M365 licenses. Check with IT.</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Review sharing settings</strong>
+                            <p>In Copilot Studio, check who the agent is published to.</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Request broader permissions</strong>
+                            <p>IT may need to enable cross-tenant sharing or guest access.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ==================== EXAMPLES SECTIONS ==================== -->
+        <div id="examples-content" class="section-hidden">
+            
+            <section id="examples">
+                <h2><span class="icon">🦄</span> Details About Our Bots</h2>
+
+                <div class="author-callout">
+                    <div class="unicorn">🦄</div>
+                    <div class="author-info">
+                        <h3>Herr Prof. Dr. Awesome-Sauce</h3>
+                        <div class="title">a.k.a. The Unicorn Prof</div>
+                        <p>This section describes how I actually use custom chatbots in my courses (Statistics, Neuroscience, Sensation & Perception, Animal Behavior, Cognitive Psychology). These aren't prescriptions — just ideas that might spark your own approaches.</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-example">
+                    <div class="alert-title">Why Share This?</div>
+                    <p>Faculty often ask "but what do you <em>actually</em> put in these things?" Here's what I do. Steal liberally, adapt freely, ignore what doesn't fit your teaching style.</p>
+                </div>
+            </section>
+
+            <section id="what-i-upload">
+                <h2><span class="icon">📁</span> What I Upload (Knowledge Sources)</h2>
+
+                <div class="card-grid">
+                    <div class="card lavender-accent">
+                        <div class="card-title">📋 Syllabus</div>
+                        <p>Gives the bot awareness of prerequisites, grading policies, schedule, and course structure. Students can ask "when is the exam?" and get accurate answers.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title">📊 PowerPoint Decks</div>
+                        <p>Defines what's actually testable content vs. enrichment. The bot knows what I emphasized, not just what's in the textbook.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title">📚 Textbook Info</div>
+                        <p>I specify the edition and chapters covered. The bot treats textbook content as supplementary — it enriches but doesn't override my materials.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title">📝 Solutions Manuals</div>
+                        <p>For statistics: practice problem solutions with acceptable ranges. The bot can grade student work without requiring exact matches.</p>
+                    </div>
+                </div>
+
+                <h3>The Knowledge Hierarchy</h3>
+                <p>I explicitly tell the bot how to prioritize sources:</p>
+
+                <div class="snippet-label">Prompt Snippet</div>
+                <div class="code-block"><span class="lavender">When answering questions, use this priority:</span>
+
+1. My course materials (PPT, syllabus) = definitive, testable content
+2. Textbook = supplementary enrichment, clearly labeled as such
+3. General knowledge = only when materials are silent, with caveat
+
+<span class="comment">If something appears in my materials AND the textbook differently,
+my materials take precedence.</span></div>
+            </section>
+
+            <section id="how-bots-teach">
+                <h2><span class="icon">🎓</span> How My Bots Teach</h2>
+
+                <h3>Zone of Proximal Development</h3>
+                <p>I don't ask students to rate their confidence constantly (they find it tedious). Instead, the bot infers difficulty level from behavioral signals:</p>
+
+                <div class="snippet-label">Prompt Snippet</div>
+                <div class="code-block"><span class="lavender">When a student asks a content question:</span>
+
+1. First ask what they already understand
+2. If stuck, break into smaller parts: "Let's start with..."
+3. If still stuck, provide a worked example of a similar concept
+4. Only after scaffolding fails, provide the direct explanation
+
+<span class="comment">Monitor for hesitation language ("I think...", "maybe...") as signals
+to increase support. Monitor for easy correct answers as signals to
+increase challenge.</span></div>
+
+                <h3>Efficiency Over Chattiness</h3>
+                <p>Students report that bots can feel time-consuming. I explicitly tell the bot to be concise:</p>
+
+                <div class="snippet-label">Prompt Snippet</div>
+                <div class="code-block"><span class="lavender">Batch interactions.</span> Ask 3-4 questions at once, give feedback together.
+
+<span class="lavender">Kill these patterns:</span>
+- "Are you ready for the next question?"
+- "Would you like me to explain further?"
+- Restating the question in feedback
+- Excessive praise per item
+
+<span class="comment">One-exchange test: Does this create NEW learning or am I being chatty?</span></div>
+
+                <h3>Academic Integrity Boundaries</h3>
+                <p>The bot distinguishes between learning support and doing homework:</p>
+
+                <div class="snippet-label">Prompt Snippet</div>
+                <div class="code-block"><span class="lavender">When a student asks about graded work:</span>
+
+"I can see this is from your [assignment]. I can't provide the answer,
+but I can help you build understanding to solve it yourself.
+What concept from your materials do you think applies?"
+
+<span class="comment">Then use Socratic questioning to scaffold—never solve directly.</span></div>
+            </section>
+
+            <section id="stats-bot">
+                <h2><span class="icon">📈</span> Statistics Practice Bot (Example)</h2>
+
+                <p>This bot helps students work through 50 practice problems (t-tests, ANOVA, correlation, regression, non-parametrics) using R's built-in datasets.</p>
+
+                <div class="card">
+                    <h4>How It Works</h4>
+                    <ul>
+                        <li><strong>Problem presentation:</strong> Research question + dataset name + variables (students use <code>str(data)</code> to explore)</li>
+                        <li><strong>Guided discovery:</strong> Asks diagnostic questions before confirming test choice</li>
+                        <li><strong>Code debugging:</strong> Identifies errors without rewriting everything for them</li>
+                        <li><strong>Flexible grading:</strong> Accepts values within rounding tolerance, doesn't require strict APA format</li>
+                        <li><strong>Solutions on request:</strong> These are practice problems — students can see complete solutions if stuck</li>
+                    </ul>
+                </div>
+
+                <h3>Grading with Acceptable Ranges</h3>
+                <div class="snippet-label">Prompt Snippet</div>
+                <div class="code-block"><span class="lavender">When grading practice problem answers:</span>
+
+- Accept values within rounding tolerance (±0.05 for statistics, ±0.001 for p-values)
+- Don't require strict APA format—key statistics + conclusion is sufficient
+- If significant result, check for effect size; prompt if missing
+- Provide specific feedback: "✓ t-statistic correct, ✗ missing Cohen's d"
+
+<span class="comment">Philosophy: These are PRACTICE problems. Learning is the goal,
+not catching students in minor formatting errors.</span></div>
+            </section>
+
+            <section id="course-bots">
+                <h2><span class="icon">📚</span> Course Content Bots (Example)</h2>
+
+                <p>For my content courses (Neuroscience, Perception, etc.), the bot handles three types of interactions:</p>
+
+                <div class="card-grid">
+                    <div class="card lavender-accent">
+                        <div class="card-title">⚡ Quick Questions</div>
+                        <p>"What's the difference between rods and cones?" → Concise, targeted answer from my materials.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title">🔍 Guided Learning</div>
+                        <p>Student seems confused → Bot asks probing questions, breaks concepts down, connects to prior knowledge.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title">📝 Quiz Practice</div>
+                        <p>"Quiz me on Chapter 5" → Generates practice questions at appropriate difficulty, gives metacognitive feedback.</p>
+                    </div>
+                </div>
+
+                <h3>Source Attribution</h3>
+                <p>The bot tells students where information comes from:</p>
+                <ul>
+                    <li><strong>"From your lecture slides..."</strong> = testable, emphasized by me</li>
+                    <li><strong>"The textbook also mentions..."</strong> = enrichment, may or may not be tested</li>
+                    <li><strong>"In the broader field..."</strong> = general knowledge, definitely not tested</li>
+                </ul>
+            </section>
+
+            <section id="what-i-dont-do">
+                <h2><span class="icon">🚫</span> What I Don't Use Bots For</h2>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">❌ Grading Actual Assignments</div>
+                        <p>Privacy concerns. I don't upload identifiable student work to consumer AI tools.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">❌ Anything with Student PII</div>
+                        <p>Names, IDs, personal situations — none of that goes into these tools.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">❌ Replacing Office Hours</div>
+                        <p>Complex issues, emotional support, nuanced advising — that's human work.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="learning-science">
+                <h2><span class="icon">🧠</span> Learning Science Principles Baked In</h2>
+
+                <p>These aren't just good ideas — they're explicitly in my bot instructions:</p>
+
+                <div class="card-grid">
+                    <div class="card lavender-accent">
+                        <div class="card-title">📊 Desirable Difficulty</div>
+                        <p>Practice questions are ~20% harder than assessment questions. Struggle improves learning.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title">🔄 Spaced Retrieval</div>
+                        <p>Quiz practice includes 10-15% questions from prior chapters, not just current material.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title">💭 Metacognitive Feedback</div>
+                        <p>Feedback explains <em>why</em> answers are right/wrong, not just correctness. Guides thinking.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title">🔗 Elaborative Processing</div>
+                        <p>Questions ask "why" and "how," not just "what." Connects to real-world examples students recognize.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="gamification-advanced">
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span class="collapsible-title">🎮 Advanced: Gamification Elements</span>
+                        <span class="collapsible-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="collapsible-inner">
+                            <p>For courses where it fits the vibe (like my intro courses), I sometimes add game-like elements. This isn't for everyone, but students who engage with it really engage.</p>
+
+                            <h4>Hint Economy</h4>
+                            <p>Students can request hints, but hints have a "cost" — encouraging independent attempts first:</p>
+
+                            <div class="snippet-label">Prompt Snippet</div>
+                            <div class="code-block"><span class="lavender">OPTIONAL: Hint Economy</span>
+
+- Students can request hints, but hints "cost" points
+- Encourages independent attempts before seeking help
+- Track: "Hints used: 2/3 available for this problem"
+- Reward streaks of correct answers without hints
+
+<span class="comment">The goal isn't punishment — it's making the decision
+to seek help a conscious choice rather than a reflex.</span></div>
+
+                            <h4>Other Elements I've Tried</h4>
+                            <ul>
+                                <li><strong>XP/Leveling:</strong> Track cumulative problems solved across sessions</li>
+                                <li><strong>Titles:</strong> "Statistics Apprentice" → "Data Detective" → "Analysis Wizard"</li>
+                                <li><strong>Confidence bets:</strong> Students predict if they're right before seeing feedback</li>
+                                <li><strong>Streak bonuses:</strong> Consecutive correct answers unlock fun facts or "Easter eggs"</li>
+                            </ul>
+
+                            <div class="alert alert-warning">
+                                <div class="alert-title">Caveat</div>
+                                <p>Gamification adds complexity and can feel forced if it doesn't match your teaching style. Start simple. Add elements only if students respond well.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="final-thoughts">
+                <h2><span class="icon">💡</span> Adapt, Don't Copy</h2>
+
+                <p>Everything here reflects my teaching style, my courses, and my students. Your context is different. Take what resonates, ignore what doesn't, and build something that works for you.</p>
+
+                <p>The best bot is one that feels like a natural extension of how you already teach — not a replacement for your judgment or your relationship with students.</p>
+
+                <div class="alert alert-example">
+                    <div class="alert-title">Questions?</div>
+                    <p>If you're at my institution and want to see these in action or talk through your own bot ideas, find me at AI Office Hours or just email. Happy to share prompt files directly.</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>Created for educators exploring AI-powered tools</p>
+        <p>Last updated: December 2025</p>
+    </footer>
+
+    <script>
+        // Audience tab switching
+        document.querySelectorAll('.audience-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                document.querySelectorAll('.audience-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Show/hide content
+                const target = tab.dataset.target;
+                document.getElementById('faculty-content').classList.add('section-hidden');
+                document.getElementById('staff-content').classList.add('section-hidden');
+                document.getElementById('examples-content').classList.add('section-hidden');
+                
+                if (target === 'faculty') {
+                    document.getElementById('faculty-content').classList.remove('section-hidden');
+                } else if (target === 'staff') {
+                    document.getElementById('staff-content').classList.remove('section-hidden');
+                } else if (target === 'examples') {
+                    document.getElementById('examples-content').classList.remove('section-hidden');
+                }
+
+                // Scroll to top of content
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // Collapsible sections
+        document.querySelectorAll('.collapsible').forEach(collapsible => {
+            const header = collapsible.querySelector('.collapsible-header');
+            const content = collapsible.querySelector('.collapsible-content');
+            
+            header.addEventListener('click', () => {
+                collapsible.classList.toggle('active');
+                
+                if (collapsible.classList.contains('active')) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                } else {
+                    content.style.maxHeight = '0';
+                }
+            });
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('.nav-links a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                
+                // Switch to appropriate content section
+                const staffSections = ['staff', 'studio-lite', 'full-studio', 'staff-sharing'];
+                const examplesSections = ['examples', 'what-i-upload', 'how-bots-teach', 'stats-bot', 'course-bots', 'what-i-dont-do', 'learning-science', 'gamification-advanced', 'final-thoughts'];
+                
+                document.querySelectorAll('.audience-tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('faculty-content').classList.add('section-hidden');
+                document.getElementById('staff-content').classList.add('section-hidden');
+                document.getElementById('examples-content').classList.add('section-hidden');
+
+                if (staffSections.includes(targetId)) {
+                    document.querySelector('.staff-tab').classList.add('active');
+                    document.getElementById('staff-content').classList.remove('section-hidden');
+                } else if (examplesSections.includes(targetId)) {
+                    document.querySelector('.examples-tab').classList.add('active');
+                    document.getElementById('examples-content').classList.remove('section-hidden');
+                } else {
+                    document.querySelector('.audience-tab:first-child').classList.add('active');
+                    document.getElementById('faculty-content').classList.remove('section-hidden');
+                }
+
+                // Then scroll to target
+                setTimeout(() => {
+                    const target = document.getElementById(targetId);
+                    if (target) {
+                        const offset = 100;
+                        const targetPosition = target.offsetTop - offset;
+                        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                    }
+                }, 100);
+            });
+        });
+
+        // Handle direct links
+        function handleDirectLink() {
+            const hash = window.location.hash.substring(1);
+            const staffSections = ['staff', 'studio-lite', 'full-studio', 'staff-sharing'];
+            const examplesSections = ['examples', 'what-i-upload', 'how-bots-teach', 'stats-bot', 'course-bots', 'what-i-dont-do', 'learning-science', 'gamification-advanced', 'final-thoughts'];
+            
+            if (staffSections.includes(hash)) {
+                document.querySelectorAll('.audience-tab').forEach(t => t.classList.remove('active'));
+                document.querySelector('.staff-tab').classList.add('active');
+                document.getElementById('faculty-content').classList.add('section-hidden');
+                document.getElementById('staff-content').classList.remove('section-hidden');
+                document.getElementById('examples-content').classList.add('section-hidden');
+            } else if (examplesSections.includes(hash)) {
+                document.querySelectorAll('.audience-tab').forEach(t => t.classList.remove('active'));
+                document.querySelector('.examples-tab').classList.add('active');
+                document.getElementById('faculty-content').classList.add('section-hidden');
+                document.getElementById('staff-content').classList.add('section-hidden');
+                document.getElementById('examples-content').classList.remove('section-hidden');
+            }
+        }
+        
+        handleDirectLink();
+    </script>
+</body>
+</html>
