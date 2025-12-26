@@ -242,10 +242,12 @@
             border: 1px solid var(--accent-lavender);
             border-radius: 8px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             display: flex;
-            gap: 1rem;
-            align-items: flex-start;
+            gap: 1.5rem;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .author-callout .unicorn {
@@ -253,17 +255,21 @@
             line-height: 1;
         }
 
+        .author-callout .author-info {
+            text-align: left;
+        }
+
         .author-callout .author-info h3 {
             margin: 0 0 0.25rem;
             color: var(--accent-lavender);
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .author-callout .author-info .title {
             color: var(--accent-gold);
             font-family: 'Space Mono', monospace;
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            margin-bottom: 0;
         }
 
         .author-callout .author-info p {
@@ -696,6 +702,12 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <div class="alert alert-info">
+                    <div class="alert-title">Key Correction</div>
+                    <p>Free ChatGPT users <strong>can access and use</strong> Custom GPTs — they just can't <em>create</em> them. This makes GPTs viable for distributing to students.</p>
+                </div>
+            </section>
 
             <section id="universal">
                 <h2><span class="icon">📋</span> The Universal Solution: Shareable Prompts</h2>
@@ -1143,22 +1155,28 @@ Begin by introducing yourself and asking what topic the student wants to work on
                 <h2><span class="icon">🦄</span> Details About Our Bots</h2>
 
                 <div class="author-callout">
+                    <div class="unicorn">🐝</div>
+                    <div class="author-info">
+                        <h3>Frau Prof. Awesome-Sauce v 2.0</h3>
+                        <div class="title">a.k.a. The Bee Prof</div>
+                    </div>
                     <div class="unicorn">🦄</div>
                     <div class="author-info">
                         <h3>Herr Prof. Dr. Awesome-Sauce</h3>
                         <div class="title">a.k.a. The Unicorn Prof</div>
-                        <p>This section describes how I actually use custom chatbots in my courses (Statistics, Neuroscience, Sensation & Perception, Animal Behavior, Cognitive Psychology). These aren't prescriptions — just ideas that might spark your own approaches.</p>
                     </div>
                 </div>
+                
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">This section describes how we actually use custom chatbots in our courses. These aren't prescriptions — just ideas that might spark your own approaches.</p>
 
                 <div class="alert alert-example">
                     <div class="alert-title">Why Share This?</div>
-                    <p>Faculty often ask "but what do you <em>actually</em> put in these things?" Here's what I do. Steal liberally, adapt freely, ignore what doesn't fit your teaching style.</p>
+                    <p>Faculty often ask "but what do you <em>actually</em> put in these things?" Here's what we do. Steal liberally, adapt freely, ignore what doesn't fit your teaching style.</p>
                 </div>
             </section>
 
             <section id="what-i-upload">
-                <h2><span class="icon">📁</span> What I Upload (Knowledge Sources)</h2>
+                <h2><span class="icon">📁</span> What We Upload (Knowledge Sources)</h2>
 
                 <div class="card-grid">
                     <div class="card lavender-accent">
@@ -1167,11 +1185,11 @@ Begin by introducing yourself and asking what topic the student wants to work on
                     </div>
                     <div class="card lavender-accent">
                         <div class="card-title">📊 PowerPoint Decks</div>
-                        <p>Defines what's actually testable content vs. enrichment. The bot knows what I emphasized, not just what's in the textbook.</p>
+                        <p>Defines what's actually testable content vs. enrichment. The bot knows what we emphasized, not just what's in the textbook.</p>
                     </div>
                     <div class="card lavender-accent">
                         <div class="card-title">📚 Textbook Info</div>
-                        <p>I specify the edition and chapters covered. The bot treats textbook content as supplementary — it enriches but doesn't override my materials.</p>
+                        <p>We specify the edition and chapters covered. The bot treats textbook content as supplementary — it enriches but doesn't override our materials.</p>
                     </div>
                     <div class="card lavender-accent">
                         <div class="card-title">📝 Solutions Manuals</div>
@@ -1180,7 +1198,7 @@ Begin by introducing yourself and asking what topic the student wants to work on
                 </div>
 
                 <h3>The Knowledge Hierarchy</h3>
-                <p>I explicitly tell the bot how to prioritize sources:</p>
+                <p>We explicitly tell the bot how to prioritize sources:</p>
 
                 <div class="snippet-label">Prompt Snippet</div>
                 <div class="code-block"><span class="lavender">When answering questions, use this priority:</span>
@@ -1194,10 +1212,10 @@ my materials take precedence.</span></div>
             </section>
 
             <section id="how-bots-teach">
-                <h2><span class="icon">🎓</span> How My Bots Teach</h2>
+                <h2><span class="icon">🎓</span> How Our Bots Teach</h2>
 
                 <h3>Zone of Proximal Development</h3>
-                <p>I don't ask students to rate their confidence constantly (they find it tedious). Instead, the bot infers difficulty level from behavioral signals:</p>
+                <p>We don't ask students to rate their confidence constantly (they find it tedious). Instead, the bot infers difficulty level from behavioral signals:</p>
 
                 <div class="snippet-label">Prompt Snippet</div>
                 <div class="code-block"><span class="lavender">When a student asks a content question:</span>
@@ -1212,7 +1230,7 @@ to increase support. Monitor for easy correct answers as signals to
 increase challenge.</span></div>
 
                 <h3>Efficiency Over Chattiness</h3>
-                <p>Students report that bots can feel time-consuming. I explicitly tell the bot to be concise:</p>
+                <p>Students report that bots can feel time-consuming. We explicitly tell the bot to be concise:</p>
 
                 <div class="snippet-label">Prompt Snippet</div>
                 <div class="code-block"><span class="lavender">Batch interactions.</span> Ask 3-4 questions at once, give feedback together.
@@ -1270,7 +1288,7 @@ not catching students in minor formatting errors.</span></div>
             <section id="course-bots">
                 <h2><span class="icon">📚</span> Course Content Bots (Example)</h2>
 
-                <p>For my content courses (Neuroscience, Perception, etc.), the bot handles three types of interactions:</p>
+                <p>For our content courses (Neuroscience, Perception, etc.), the bot handles three types of interactions:</p>
 
                 <div class="card-grid">
                     <div class="card lavender-accent">
@@ -1297,12 +1315,12 @@ not catching students in minor formatting errors.</span></div>
             </section>
 
             <section id="what-i-dont-do">
-                <h2><span class="icon">🚫</span> What I Don't Use Bots For</h2>
+                <h2><span class="icon">🚫</span> What We Don't Use Bots For</h2>
 
                 <div class="card-grid">
                     <div class="card">
                         <div class="card-title">❌ Grading Actual Assignments</div>
-                        <p>Privacy concerns. I don't upload identifiable student work to consumer AI tools.</p>
+                        <p>Privacy concerns. We don't upload identifiable student work to consumer AI tools.</p>
                     </div>
                     <div class="card">
                         <div class="card-title">❌ Anything with Student PII</div>
@@ -1318,7 +1336,7 @@ not catching students in minor formatting errors.</span></div>
             <section id="learning-science">
                 <h2><span class="icon">🧠</span> Learning Science Principles Baked In</h2>
 
-                <p>These aren't just good ideas — they're explicitly in my bot instructions:</p>
+                <p>These aren't just good ideas — they're explicitly in our bot instructions:</p>
 
                 <div class="card-grid">
                     <div class="card lavender-accent">
@@ -1348,7 +1366,7 @@ not catching students in minor formatting errors.</span></div>
                     </div>
                     <div class="collapsible-content">
                         <div class="collapsible-inner">
-                            <p>For courses where it fits the vibe (like my intro courses), I sometimes add game-like elements. This isn't for everyone, but students who engage with it really engage.</p>
+                            <p>For courses where it fits the vibe (like our intro courses), we sometimes add game-like elements. This isn't for everyone, but students who engage with it really engage.</p>
 
                             <h4>Hint Economy</h4>
                             <p>Students can request hints, but hints have a "cost" — encouraging independent attempts first:</p>
@@ -1364,7 +1382,7 @@ not catching students in minor formatting errors.</span></div>
 <span class="comment">The goal isn't punishment — it's making the decision
 to seek help a conscious choice rather than a reflex.</span></div>
 
-                            <h4>Other Elements I've Tried</h4>
+                            <h4>Other Elements We've Tried</h4>
                             <ul>
                                 <li><strong>XP/Leveling:</strong> Track cumulative problems solved across sessions</li>
                                 <li><strong>Titles:</strong> "Statistics Apprentice" → "Data Detective" → "Analysis Wizard"</li>
@@ -1384,13 +1402,13 @@ to seek help a conscious choice rather than a reflex.</span></div>
             <section id="final-thoughts">
                 <h2><span class="icon">💡</span> Adapt, Don't Copy</h2>
 
-                <p>Everything here reflects my teaching style, my courses, and my students. Your context is different. Take what resonates, ignore what doesn't, and build something that works for you.</p>
+                <p>Everything here reflects our teaching styles, our courses, and our students. Your context is different. Take what resonates, ignore what doesn't, and build something that works for you.</p>
 
                 <p>The best bot is one that feels like a natural extension of how you already teach — not a replacement for your judgment or your relationship with students.</p>
 
                 <div class="alert alert-example">
                     <div class="alert-title">Questions?</div>
-                    <p>If you're at my institution and want to see these in action or talk through your own bot ideas, find me at AI Office Hours or just email. Happy to share prompt files directly.</p>
+                    <p>If you're at our institution and want to see these in action or talk through your own bot ideas, find us at AI Office Hours or just email. Happy to share prompt files directly.</p>
                 </div>
             </section>
 
