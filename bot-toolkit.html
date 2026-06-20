@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Toolkit | Psych AI Integration Pilot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-hover: #222230;
+            --accent-gold: #d4a853;
+            --accent-gold-dim: #b8923f;
+            --accent-teal: #2dd4bf;
+            --accent-coral: #f97066;
+            --accent-lavender: #a78bfa;
+            --text-primary: #f0f0f5;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border: #2a2a3a;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --error: #f87171;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(212, 168, 83, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 168, 83, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -1;
+        }
+
+        nav {
+            position: sticky; top: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 0.75rem 0;
+        }
+
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap;
+        }
+
+        .nav-brand {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--text-primary); background: var(--bg-hover); }
+        .nav-links a.workspace-link { color: var(--accent-teal); }
+
+        header { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem 2.5rem; }
+
+        header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        header h1 span { color: var(--accent-gold); }
+
+        header .subtitle { font-size: 1.1rem; color: var(--text-secondary); max-width: 720px; }
+
+        .origin-note {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            max-width: 720px;
+        }
+
+        .origin-note a { color: var(--accent-lavender); text-decoration: none; }
+        .origin-note a:hover { text-decoration: underline; }
+
+        .audience-tabs { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+
+        .audience-tab {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .audience-tab:hover { border-color: var(--accent-gold-dim); color: var(--text-primary); }
+
+        .audience-tab.active {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            background: rgba(212, 168, 83, 0.1);
+        }
+
+        .audience-tab.workspace-tab.active {
+            border-color: var(--accent-teal);
+            color: var(--accent-teal);
+            background: rgba(45, 212, 191, 0.1);
+        }
+
+        main { max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem; }
+        section { margin-bottom: 3rem; }
+        .section-hidden { display: none; }
+
+        h2 {
+            font-size: 1.5rem; font-weight: 700;
+            margin-bottom: 1.5rem; padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+
+        h2 .icon { font-size: 1.25rem; }
+
+        h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: var(--text-primary); }
+        h4 { font-size: 1rem; font-weight: 600; margin: 1rem 0 0.5rem; color: var(--accent-gold); }
+        p { color: var(--text-secondary); margin-bottom: 1rem; }
+
+        /* Confidence callout */
+        .confidence-note {
+            background: rgba(167, 139, 250, 0.08);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent-lavender);
+            border-radius: 6px;
+            padding: 1.1rem 1.25rem;
+            margin: 1.5rem 0 2rem;
+            font-size: 0.9rem;
+        }
+
+        .confidence-note .alert-title { font-weight: 600; color: var(--text-primary); margin-bottom: 0.4rem; }
+        .confidence-note p { margin: 0; font-size: 0.88rem; }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .card:hover { border-color: var(--accent-gold-dim); transform: translateY(-2px); }
+        .card.teal-accent:hover { border-color: var(--accent-teal); }
+        .card.lavender-accent:hover { border-color: var(--accent-lavender); }
+
+        .card-title {
+            font-size: 1.05rem; font-weight: 700; margin-bottom: 0.75rem;
+            display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;
+        }
+
+        .card-title .label-text { display: flex; align-items: center; gap: 0.5rem; }
+
+        .card ul { margin: 0.75rem 0; padding-left: 1.25rem; }
+        .card li { color: var(--text-secondary); margin-bottom: 0.4rem; }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-practice { background: rgba(212, 168, 83, 0.18); color: var(--accent-gold); }
+        .badge-suggestion { background: rgba(249, 112, 102, 0.18); color: var(--accent-coral); }
+        .badge-required { background: rgba(212, 168, 83, 0.18); color: var(--accent-gold); }
+        .badge-optional { background: rgba(45, 212, 191, 0.18); color: var(--accent-teal); }
+
+        /* Alert boxes */
+        .alert { padding: 1rem 1.25rem; border-radius: 6px; margin: 1rem 0; border-left: 3px solid; }
+        .alert-info { background: rgba(45, 212, 191, 0.1); border-color: var(--accent-teal); }
+        .alert-warning { background: rgba(251, 191, 36, 0.1); border-color: var(--warning); }
+        .alert-success { background: rgba(52, 211, 153, 0.1); border-color: var(--success); }
+        .alert-example { background: rgba(167, 139, 250, 0.1); border-color: var(--accent-lavender); }
+        .alert-title { font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .alert p { margin: 0; font-size: 0.9rem; }
+
+        /* Steps */
+        .steps { counter-reset: step; margin: 1rem 0; }
+
+        .step {
+            display: flex; gap: 1rem; margin-bottom: 1rem; padding: 1rem;
+            background: var(--bg-card); border-radius: 6px; border: 1px solid var(--border);
+        }
+
+        .step::before {
+            counter-increment: step; content: counter(step);
+            display: flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; min-width: 28px;
+            background: var(--accent-gold); color: var(--bg-primary);
+            border-radius: 50%; font-weight: 700; font-size: 0.85rem;
+        }
+
+        .step.teal::before { background: var(--accent-teal); }
+        .step-content { flex: 1; }
+        .step-content strong { color: var(--text-primary); }
+        .step-content p { margin: 0.25rem 0 0; font-size: 0.9rem; }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: var(--text-secondary);
+        }
+
+        .code-block .highlight { color: var(--accent-gold); }
+        .code-block .lavender { color: var(--accent-lavender); }
+
+        .snippet-label {
+            display: inline-block;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-lavender);
+            background: rgba(167, 139, 250, 0.15);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Comparison table */
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+        .comparison-table th, .comparison-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+        .comparison-table th {
+            background: var(--bg-secondary); color: var(--text-primary); font-weight: 600;
+            font-family: 'Space Mono', monospace; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .comparison-table td { background: var(--bg-card); color: var(--text-secondary); }
+        .comparison-table tr:hover td { background: var(--bg-hover); }
+        .comparison-table .platform-name { color: var(--text-primary); font-weight: 600; }
+        .yes { color: var(--success); }
+        .no { color: var(--error); }
+        .maybe { color: var(--warning); }
+
+        /* Builder layout */
+        .builder-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+            align-items: start;
+            margin-top: 1.5rem;
+        }
+
+        .module-category { margin-bottom: 2.25rem; }
+
+        .module-category h3 {
+            display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-top: 0;
+        }
+
+        .module-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .module-option { cursor: pointer; display: block; }
+        .module-option input { position: absolute; opacity: 0; pointer-events: none; }
+
+        .option-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            height: 100%;
+            transition: all 0.2s;
+        }
+
+        .module-option:has(input:checked) .option-card {
+            border-color: var(--accent-lavender);
+            background: rgba(167, 139, 250, 0.08);
+        }
+
+        .option-title {
+            font-weight: 700; font-size: 0.92rem; margin-bottom: 0.35rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        .option-check {
+            width: 15px; height: 15px; border-radius: 50%;
+            border: 2px solid var(--border); display: inline-block; flex-shrink: 0;
+        }
+
+        .module-option input[type="checkbox"] + .option-card .option-check { border-radius: 4px; }
+
+        .module-option:has(input:checked) .option-check {
+            border-color: var(--accent-lavender);
+            background: var(--accent-lavender);
+        }
+
+        .option-desc { font-size: 0.83rem; color: var(--text-secondary); margin: 0; }
+
+        .preview-panel {
+            position: sticky;
+            top: 90px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .preview-panel h3 { margin-top: 0; font-size: 1rem; }
+        .preview-panel .preview-hint { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+
+        #preview {
+            width: 100%;
+            min-height: 440px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            resize: vertical;
+        }
+
+        .copy-btn {
+            margin-top: 0.75rem;
+            width: 100%;
+            padding: 0.65rem;
+            background: var(--accent-lavender);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .copy-btn:hover { opacity: 0.85; }
+
+        @media (max-width: 900px) {
+            .builder-layout { grid-template-columns: 1fr; }
+            .preview-panel { position: static; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-inner { flex-direction: column; gap: 1rem; }
+            .nav-links { justify-content: center; }
+            header { padding: 2rem 1.5rem; }
+            main { padding: 0 1.5rem 3rem; }
+            .audience-tabs { flex-direction: column; }
+            .comparison-table { font-size: 0.8rem; }
+            .comparison-table th, .comparison-table td { padding: 0.75rem 0.5rem; }
+        }
+
+        footer {
+            text-align: center; padding: 2rem; border-top: 1px solid var(--border);
+            color: var(--text-muted); font-size: 0.85rem;
+        }
+
+        footer a { color: var(--accent-gold); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <div class="nav-brand">Psych AI Integration · Bot Toolkit</div>
+            <div class="nav-links">
+                <a href="#builder">Tutor Bot Builder</a>
+                <a href="#workspace" class="workspace-link">Faculty Workspace Bot</a>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Build Your Course <span>AI Assistant</span></h1>
+        <p class="subtitle">Two tools, two audiences. Assemble a student-facing tutor bot from interchangeable pieces, then set up your own course-prep assistant — the one only you use, not the one you hand to students.</p>
+        <p class="origin-note">Built for the Psych AI Integration Pilot (Fall 2026), written to be generic enough that any program pilot can fork it. Pairs with the <a href="https://jkoxford-a11y.github.io/customguide/" target="_blank" rel="noopener">Custom AI Chatbots for Higher Ed guide</a>, which covers platform setup and full worked examples in more depth.</p>
+
+        <div class="audience-tabs">
+            <button class="audience-tab active" data-target="builder">🧩 Tutor Bot Builder</button>
+            <button class="audience-tab workspace-tab" data-target="workspace">🗂️ Faculty Workspace Bot</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- ==================== TUTOR BOT BUILDER ==================== -->
+        <div id="builder-content">
+
+            <section id="builder">
+                <h2><span class="icon">🧩</span> Build a Student-Facing Tutor Bot</h2>
+                <p>Each category below is one piece. Pick one option from the required categories, add whatever optional pieces fit your course, and the panel on the right assembles them into a single instructions document — something you can paste into a Custom GPT, a Claude Project, or a Boodlebox bot.</p>
+
+                <div class="confidence-note">
+                    <div class="alert-title">A note on sourcing, since this matters</div>
+                    <p><span class="badge badge-practice">From practice</span> pieces are language that's actually been used and tested in a real course. <span class="badge badge-suggestion">Suggestion</span> pieces are ones built for this toolkit from general prompt-engineering practice — reasonable starting points, not field-tested here yet. Treating prompt fragments as recombinable blocks is a common framing in current prompt-engineering writing, but composing them doesn't guarantee predictable behavior the way physical bricks do — the same model can respond differently to the same instructions on different runs. Test whatever you assemble against a real student question before trusting it with a class.</p>
+                </div>
+
+                <div class="builder-layout">
+                    <div class="builder-modules">
+
+                        <div class="module-category">
+                            <h3>🎭 Role &amp; Identity <span class="badge badge-required">required · pick one</span></h3>
+                            <div class="module-options">
+                                <label class="module-option">
+                                    <input type="radio" name="role" value="auto" checked>
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Auto-Detecting Tutor</div>
+                                        <p class="option-desc">Reads your uploaded syllabus and slides to introduce itself with the right course name and chapter structure — no manual setup per course. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                                <label class="module-option">
+                                    <input type="radio" name="role" value="named">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Named Persona</div>
+                                        <p class="option-desc">A branded character with a consistent voice across the semester — useful if you want the bot to feel distinct from a generic assistant. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                                <label class="module-option">
+                                    <input type="radio" name="role" value="discipline">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Discipline-Branded Tutor</div>
+                                        <p class="option-desc">Names the subject and the kind of thinking you care about, not just the topic — leans the bot into your field's habits of mind. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="module-category">
+                            <h3>📚 Knowledge Hierarchy <span class="badge badge-required">required · pick one</span></h3>
+                            <div class="module-options">
+                                <label class="module-option">
+                                    <input type="radio" name="knowledge" value="strict" checked>
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Materials-First Hierarchy</div>
+                                        <p class="option-desc">Course materials are definitive, textbook is supplementary, general knowledge is a last resort. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                                <label class="module-option">
+                                    <input type="radio" name="knowledge" value="flagged">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Flagged-Gaps Hierarchy</div>
+                                        <p class="option-desc">Same order, but the bot has to explicitly label anything pulled from outside your materials instead of blending it in silently. Recommended default if you've ever caught an AI quietly inventing content. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="module-category">
+                            <h3>🧠 Pedagogical Approach <span class="badge badge-required">required · pick one</span></h3>
+                            <div class="module-options">
+                                <label class="module-option">
+                                    <input type="radio" name="pedagogy" value="socratic" checked>
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Socratic</div>
+                                        <p class="option-desc">Ask a guiding question before explaining. Check understanding first, lecture second.</p>
+                                    </div>
+                                </label>
+                                <label class="module-option">
+                                    <input type="radio" name="pedagogy" value="scaffolding">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Scaffolding (ZPD)</div>
+                                        <p class="option-desc">Breaks confusion into smaller parts before giving a worked example, before giving the direct answer. Infers difficulty from hesitation language rather than asking students to self-rate. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                                <label class="module-option">
+                                    <input type="radio" name="pedagogy" value="metacognitive">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Metacognitive</div>
+                                        <p class="option-desc">Asks students to explain their reasoning before confirming or correcting it.</p>
+                                    </div>
+                                </label>
+                                <label class="module-option">
+                                    <input type="radio" name="pedagogy" value="growth">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Growth Mindset</div>
+                                        <p class="option-desc">Praises process and strategy, not just correct answers. Frames errors as information.</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="module-category">
+                            <h3>🚧 Academic Integrity Boundary <span class="badge badge-optional">recommended · toggle</span></h3>
+                            <div class="module-options">
+                                <label class="module-option">
+                                    <input type="checkbox" name="boundaries" value="on" checked>
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Include boundary language</div>
+                                        <p class="option-desc">Distinguishes learning support from doing the student's graded work for them, with a specific redirect script. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="module-category">
+                            <h3>💬 Interaction Style <span class="badge badge-required">required · pick one</span></h3>
+                            <div class="module-options">
+                                <label class="module-option">
+                                    <input type="radio" name="interaction" value="efficient" checked>
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Efficient</div>
+                                        <p class="option-desc">Batches questions, kills filler check-ins ("ready for the next one?"). Built for students who find chatty bots tedious. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                                <label class="module-option">
+                                    <input type="radio" name="interaction" value="conversational">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Conversational</div>
+                                        <p class="option-desc">One idea at a time, with check-ins along the way. Better fit for students who need a slower pace to stay engaged. <span class="badge badge-suggestion" style="margin-top:0.4rem;display:inline-block;">Suggestion</span></p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="module-category">
+                            <h3>➕ Optional Add-Ons <span class="badge badge-optional">pick any</span></h3>
+                            <div class="module-options">
+                                <label class="module-option">
+                                    <input type="checkbox" name="addon" value="gamification">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Hint Economy</div>
+                                        <p class="option-desc">Hints "cost" points, encouraging an independent attempt first. Adds complexity — works best in courses where students already respond well to game-like framing. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                                <label class="module-option">
+                                    <input type="checkbox" name="addon" value="mastery">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Mastery Tracking</div>
+                                        <p class="option-desc">Tracks per-chapter mastery and adjusts difficulty. Persists across sessions in Claude Projects; resets each new thread in a Custom GPT. <span class="badge badge-suggestion" style="margin-top:0.4rem;display:inline-block;">Suggestion</span></p>
+                                    </div>
+                                </label>
+                                <label class="module-option">
+                                    <input type="checkbox" name="addon" value="sourceattr">
+                                    <div class="option-card">
+                                        <div class="option-title"><span class="option-check"></span>Source Attribution</div>
+                                        <p class="option-desc">Bot labels where each answer came from — slides, textbook, or general field knowledge — so students know what's testable. <span class="badge badge-practice" style="margin-top:0.4rem;display:inline-block;">From practice</span></p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="preview-panel">
+                        <h3>Your Compiled Instructions</h3>
+                        <p class="preview-hint">Updates live as you pick pieces. Copy it, fill in the brackets, paste it as your system prompt or custom instructions.</p>
+                        <textarea id="preview" readonly spellcheck="false"></textarea>
+                        <button class="copy-btn" id="copy-btn">Copy to clipboard</button>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <div class="alert-title">Where this goes</div>
+                    <p>Paste the compiled text as a Boodlebox bot's instructions, a Claude Project's custom instructions, or a Custom GPT's configuration. Then upload the materials the Knowledge Hierarchy piece refers to — typically your syllabus and slide decks. For full worked examples of assembled bots already running in real courses, see the <a href="https://jkoxford-a11y.github.io/customguide/#examples" target="_blank" rel="noopener" style="color: var(--accent-lavender);">Details About Our Bots</a> section of the main guide.</p>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ==================== FACULTY WORKSPACE BOT ==================== -->
+        <div id="workspace-content" class="section-hidden">
+
+            <section id="workspace">
+                <h2><span class="icon">🗂️</span> Your Faculty Workspace Bot</h2>
+                <p>This is a different bot from the one above. The tutor bot is for students. This one is for you — course prep, drafting assessments, rewriting a syllabus section, thinking through a unit. It isn't shared with anyone, and it shouldn't see student work.</p>
+
+                <h3>What to Provide as Materials</h3>
+                <div class="card-grid">
+                    <div class="card lavender-accent">
+                        <div class="card-title"><span class="label-text">📋 Syllabus</span><span class="badge badge-practice">From practice</span></div>
+                        <p>Prerequisites, grading policy, schedule, course structure. Lets the assistant answer structural questions accurately instead of guessing.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title"><span class="label-text">📊 Slide Decks</span><span class="badge badge-practice">From practice</span></div>
+                        <p>Defines what's actually testable vs. enrichment. The assistant works from what you emphasized, not just what's in the textbook.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title"><span class="label-text">📝 Assignment Instructions &amp; Rubrics</span><span class="badge badge-suggestion">Suggestion</span></div>
+                        <p>Without these, an assistant drafting feedback or practice items has to guess at your standards. With them, it can apply your actual criteria.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title"><span class="label-text">📚 Textbook Info</span><span class="badge badge-practice">From practice</span></div>
+                        <p>Specify edition and chapters covered. Treated as supplementary, not as a replacement for your own materials.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title"><span class="label-text">🗣️ Writing Samples</span><span class="badge badge-suggestion">Suggestion</span></div>
+                        <p>Old lecture notes, prior announcements, graded feedback you've written. If you want drafts to sound like you instead of generic AI, voice comes from examples, not instructions.</p>
+                    </div>
+                    <div class="card lavender-accent">
+                        <div class="card-title"><span class="label-text">🏫 Program Context</span><span class="badge badge-suggestion">Suggestion</span></div>
+                        <p>Shared learning outcomes or program-level language, if you want consistency across courses in a multi-course pilot.</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <div class="alert-title">What stays out</div>
+                    <p>No identifiable student work, no grades, no names or IDs — not even de-identified, unless you've stripped it yourself and confirmed it's clean. This is a course-prep tool, not a grading tool.</p>
+                </div>
+
+                <h3>The Instruction That Matters Most</h3>
+                <p>Materials alone don't stop an assistant from quietly filling gaps with outside knowledge and presenting it as if it came from your slides. Tell it not to:</p>
+
+                <div class="snippet-label">Prompt Snippet · From Practice</div>
+                <div class="code-block"><span class="highlight">## How to Use My Materials</span>
+
+When answering questions or drafting content, use this priority:
+1. My uploaded materials (syllabus, slides, rubrics) = definitive
+2. Textbook = supplementary, clearly labeled as such
+3. General field knowledge = only when my materials are silent
+
+Never blend silently. If you're drawing on anything not explicitly
+in my materials, say so out loud: <span class="lavender">"NOT in your materials — adding from
+general [field] knowledge."</span> Don't reframe outside knowledge to make
+it sound like it came from my own documents.</div>
+
+                <p>This single instruction is the difference between an assistant that extends your materials and one that quietly replaces them with its own.</p>
+
+                <h3>Setting It Up by Platform</h3>
+                <p>The right platform depends on whether this stays personal or needs to be shared with co-instructors or a TA.</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Best For</th>
+                            <th>Materials Capacity</th>
+                            <th>Shareable?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="platform-name">Boodlebox</td>
+                            <td>Pilot-default, FERPA-compliant</td>
+                            <td>Knowledge Bank, shared per folder</td>
+                            <td><span class="maybe">Within institution</span></td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Claude Projects</td>
+                            <td>Personal teaching prep</td>
+                            <td>100+ documents</td>
+                            <td><span class="no">Cannot share</span></td>
+                        </tr>
+                        <tr>
+                            <td class="platform-name">Custom GPT</td>
+                            <td>Sharing with co-instructors/TAs</td>
+                            <td>Knowledge files, capped</td>
+                            <td><span class="yes">Plus/Team required to create</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-success">
+                    <div class="alert-title">If you're in the Psych AI Integration Pilot</div>
+                    <p>Boodlebox is the institutionally backed default — FERPA-compliant, with licenses already provisioned through the pilot. Build one folder per course, upload your knowledge sources once, and the same materials can back multiple bots (a workspace assistant for you, a tutor bot for students) without re-uploading.</p>
+                </div>
+
+                <div class="steps">
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Create a folder per course</strong>
+                            <p>Keep materials organized by course, or by unit if a course has a lot of content. Boodlebox's shared-folder structure means everything in it is available to any bot pointed at that folder.</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Upload your knowledge sources once</strong>
+                            <p>Syllabus, slides, rubrics, writing samples. The Knowledge Bank persists across bots and chats, so you don't re-upload for every new conversation.</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Add the priority instruction above</strong>
+                            <p>Paste the "How to Use My Materials" snippet as the bot's custom instructions. This is what keeps it grounded in your materials instead of drifting toward generic answers.</p>
+                        </div>
+                    </div>
+                    <div class="step teal">
+                        <div class="step-content">
+                            <strong>Test it before relying on it</strong>
+                            <p>Ask it something you already know the answer to. Check whether it cites your materials or quietly fills in from elsewhere.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Privacy, Briefly</h3>
+                <p>De-identify anything involving students before it goes into any AI tool, consumer or institutional. Boodlebox's FERPA status covers the platform; it doesn't substitute for stripping names and IDs yourself. For the fuller privacy comparison across platforms, see the <a href="https://jkoxford-a11y.github.io/customguide/#privacy" target="_blank" rel="noopener" style="color: var(--accent-teal);">Privacy &amp; FERPA section</a> of the main guide.</p>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>Companion resource for the Psych AI Integration Pilot — built to be adapted by other program pilots. Steal liberally, ignore what doesn't fit.</p>
+    </footer>
+
+    <script>
+        const SNIPPETS = {
+            role: {
+                auto: '## Role & Identity\nYou are an AI tutor for this course. Detect the course name, instructor, and chapter/unit structure from the uploaded syllabus and slide decks — don\'t ask the student to tell you what course this is.\n\nIntroduce yourself: "Hi! I\'m your AI tutor for [Course Name]. I can see we\'re covering [X chapters/units] this semester."',
+                named: '## Role & Identity\nYou are [Persona Name], a [tone — e.g., warm and slightly irreverent] tutor for [Course Name]. Stay in this voice across the conversation, but never let the persona get in the way of a clear, accurate answer.',
+                discipline: '## Role & Identity\nYou are a [discipline] tutor specializing in [sub-area — e.g., research methods, sensory neuroscience]. You help students build [specific outcome — e.g., the ability to evaluate a research design], not just memorize terms.'
+            },
+            knowledge: {
+                strict: '## Knowledge Hierarchy\nWhen answering questions, use this priority:\n1. My course materials (PPT, syllabus) = definitive, testable content\n2. Textbook = supplementary enrichment, clearly labeled as such\n3. General knowledge = only when materials are silent, with caveat\n\nIf something appears in my materials AND the textbook differently, my materials take precedence.',
+                flagged: '## Knowledge Hierarchy\nSame priority: course materials first, textbook second, general knowledge last. But never blend silently — if you\'re drawing on anything not explicitly in my uploaded materials, say so out loud: "NOT in your materials — adding from general [field] knowledge." Don\'t reframe outside knowledge to make it sound like it came from my slides.'
+            },
+            pedagogy: {
+                socratic: '## Pedagogical Approach: Socratic\nWhen a student asks a content question, ask a guiding question before giving the explanation. Check understanding first, don\'t lecture first and check after.',
+                scaffolding: '## Pedagogical Approach: Scaffolding (Zone of Proximal Development)\nWhen a student asks a content question:\n1. First ask what they already understand\n2. If stuck, break into smaller parts: "Let\'s start with..."\n3. If still stuck, provide a worked example of a similar concept\n4. Only after scaffolding fails, provide the direct explanation\n\nMonitor for hesitation language ("I think...", "maybe...") as a signal to increase support. Monitor for easy correct answers as a signal to increase challenge.',
+                metacognitive: '## Pedagogical Approach: Metacognitive\nAfter a student answers, ask them to explain *why* they think that\'s right before confirming or correcting. Feedback should explain the reasoning behind right/wrong, not just label it.',
+                growth: '## Pedagogical Approach: Growth Mindset\nPraise process and strategy ("good use of elimination") rather than correctness alone. Frame errors as information about where to focus next, not as failures.'
+            },
+            interaction: {
+                efficient: '## Interaction Style: Efficient\nBatch interactions. Ask 3-4 questions at once, give feedback together.\n\nKill these patterns:\n- "Are you ready for the next question?"\n- "Would you like me to explain further?"\n- Restating the question in feedback\n- Excessive praise per item\n\nOne-exchange test: does this create NEW learning, or am I just being chatty?',
+                conversational: '## Interaction Style: Conversational\nOne question or idea at a time. It\'s fine to check in ("Want to try another, or go deeper on this one?") — some students need the slower pace to stay engaged, especially early in a course.'
+            },
+            addon: {
+                gamification: '## Optional: Hint Economy\nStudents can request hints, but hints "cost" points — encouraging independent attempts first. Track: "Hints used: 2/3 available for this problem." Reward streaks of correct answers without hints. The goal isn\'t punishment — it\'s making the decision to seek help a conscious choice rather than a reflex.',
+                mastery: '## Optional: Mastery Tracking\nTrack which chapters/units a student has demonstrated mastery of within this conversation, and adjust difficulty accordingly — move to harder material after several easy correct answers, drop back after struggle.\n\nPlatform note: this persists across sessions in Claude Projects (memory carries between chats). In a Custom GPT, it typically only persists within one conversation thread — tell students to continue the same chat rather than starting a new one if they want continuity.',
+                sourceattr: '## Optional: Source Attribution\nTell students where information comes from:\n- "From your lecture slides..." = testable, emphasized by your instructor\n- "The textbook also mentions..." = enrichment, may not be tested\n- "In the broader field..." = general knowledge, definitely not tested'
+            }
+        };
+
+        const BOUNDARIES_SNIPPET = '## Boundaries\nNever provide complete solutions to graded work. When a student asks about an assignment: "I can see this is from your [assignment]. I can\'t provide the answer, but I can help you build understanding to solve it yourself. What concept from your materials do you think applies?" Then use Socratic questioning to scaffold — never solve directly.';
+
+        const FIRST_MESSAGE_SNIPPET = '## First Message\nIntroduce yourself per the Role section above, then ask what the student wants to work on.';
+
+        function compile() {
+            let out = '# [Your Course Name] AI Tutor\n\n';
+
+            const role = document.querySelector('input[name="role"]:checked').value;
+            out += SNIPPETS.role[role] + '\n\n';
+
+            const knowledge = document.querySelector('input[name="knowledge"]:checked').value;
+            out += SNIPPETS.knowledge[knowledge] + '\n\n';
+
+            const pedagogy = document.querySelector('input[name="pedagogy"]:checked').value;
+            out += SNIPPETS.pedagogy[pedagogy] + '\n\n';
+
+            const boundariesBox = document.querySelector('input[name="boundaries"]');
+            if (boundariesBox && boundariesBox.checked) {
+                out += BOUNDARIES_SNIPPET + '\n\n';
+            }
+
+            const interaction = document.querySelector('input[name="interaction"]:checked').value;
+            out += SNIPPETS.interaction[interaction] + '\n\n';
+
+            document.querySelectorAll('input[name="addon"]:checked').forEach(cb => {
+                out += SNIPPETS.addon[cb.value] + '\n\n';
+            });
+
+            out += FIRST_MESSAGE_SNIPPET;
+
+            document.getElementById('preview').value = out;
+        }
+
+        document.querySelectorAll('.module-options input').forEach(input => {
+            input.addEventListener('change', compile);
+        });
+
+        compile();
+
+        document.getElementById('copy-btn').addEventListener('click', async () => {
+            const ta = document.getElementById('preview');
+            const btn = document.getElementById('copy-btn');
+            const original = btn.textContent;
+            try {
+                await navigator.clipboard.writeText(ta.value);
+            } catch (e) {
+                ta.select();
+                document.execCommand('copy');
+            }
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = original; }, 1500);
+        });
+
+        // Tab switching
+        document.querySelectorAll('.audience-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                const target = this.dataset.target;
+
+                document.querySelectorAll('.audience-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                document.getElementById('builder-content').classList.add('section-hidden');
+                document.getElementById('workspace-content').classList.add('section-hidden');
+
+                document.getElementById(target + '-content').classList.remove('section-hidden');
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+
+                document.querySelectorAll('.audience-tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('builder-content').classList.add('section-hidden');
+                document.getElementById('workspace-content').classList.add('section-hidden');
+
+                if (targetId === 'workspace') {
+                    document.querySelector('.workspace-tab').classList.add('active');
+                    document.getElementById('workspace-content').classList.remove('section-hidden');
+                } else {
+                    document.querySelector('.audience-tab:first-child').classList.add('active');
+                    document.getElementById('builder-content').classList.remove('section-hidden');
+                }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
